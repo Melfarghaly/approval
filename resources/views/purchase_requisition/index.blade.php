@@ -83,6 +83,8 @@
                         <th>@lang('purchase.location')</th>
                         <th>@lang('sale.status')</th>
                         <th>@lang('lang_v1.required_by_date')</th>
+                        <th>@lang('lang_v1.UserConfirmed')</th>
+                        <th>@lang('lang_v1.userWhoConfirmed')</th>
                         <th>@lang('lang_v1.added_by')</th>
                     </tr>
                 </thead>
@@ -167,6 +169,8 @@
                         data: 'delivery_date',
                         name: 'delivery_date'
                     },
+                    { data: 'confirmedUsers', name: 'confirmedUsers', 'searchable': false, 'sortable':false},
+                    { data: 'userWhoConfirmed', name: 'userWhoConfirmed', 'searchable': false, 'sortable':false},
                     {
                         data: 'added_by',
                         name: 'u.first_name'

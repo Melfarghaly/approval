@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AccountTransaction;
+use App\Actions\CreateTransactionApproval;
 use App\Business;
 use App\BusinessLocation;
 use App\Contact;
@@ -115,6 +116,27 @@ class PurchaseController extends Controller
             }
 
             return Datatables::of($purchases)
+                ->addColumn('confirmedUsers', function ($row) {
+                    $transactionApprovals = DB::table('transaction_approvals')
+                        ->select('user_id')
+                        ->where('transaction_id', $row->id)
+                        ->pluck('user_id');
+
+                    $usersForApproval = $transactionApprovals->count() > 0 ? DB::table('users')->whereIn('id', $transactionApprovals->toArray())->pluck('first_name')->toArray() : [];
+
+                    return $usersForApproval;
+                })->addColumn('userWhoConfirmed', function ($row) {
+
+                    $transactionApprovals = DB::table('transaction_approvals')
+                        ->where('is_confirmed', 1)
+                        ->select('user_id')
+                        ->where('transaction_id', $row->id)
+                        ->pluck('user_id');
+
+                    $usersForApproval = $transactionApprovals->count() > 0 ? DB::table('users')->whereIn('id', $transactionApprovals->toArray())->pluck('first_name')->toArray() : [];
+
+                    return $usersForApproval;
+                })
                 ->addColumn('action', function ($row) {
                     $html = '<div class="btn-group">
                             <button type="button" class="btn-modal tw-dw-btn tw-dw-btn-xs tw-dw-btn-outline  tw-dw-btn-info tw-w-max dropdown-toggle" 
@@ -127,6 +149,17 @@ class PurchaseController extends Controller
                     if (auth()->user()->can('purchase.view')) {
                         $html .= '<li><a href="#" data-href="'.action([\App\Http\Controllers\PurchaseController::class, 'show'], [$row->id]).'" class="btn-modal" data-container=".view_modal"><i class="fas fa-eye" aria-hidden="true"></i>'.__('messages.view').'</a></li>';
                     }
+
+                    $transactionApprovals = DB::table('transaction_approvals')
+                        ->where('transaction_id', $row->id)
+                        ->where('is_confirmed', 0)
+                        ->first();
+
+                    if ($transactionApprovals?->user_id == auth()->id()) {
+                        $html .= '<li><a  href="' . action([\App\Http\Controllers\SellPosController::class, 'storeApproval'], [$row->id]) . '" class="store-approves" ><i class="fas fa-eye" aria-hidden="true"></i> ' . __('اعتمد') . '</a></li>';
+                    }
+
+
                     if (auth()->user()->can('purchase.view')) {
                         $html .= '<li><a href="#" class="print-invoice" data-href="'.action([\App\Http\Controllers\PurchaseController::class, 'printInvoice'], [$row->id]).'"><i class="fas fa-print" aria-hidden="true"></i>'.__('messages.print').'</a></li>';
                     }
@@ -362,7 +395,7 @@ class PurchaseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, CreateTransactionApproval $createTransactionApproval)
     {
         if (! auth()->user()->can('purchase.create')) {
             abort(403, 'Unauthorized action.');
@@ -475,6 +508,9 @@ class PurchaseController extends Controller
             }
 
             $transaction = Transaction::create($transaction_data);
+
+            $business = Business::find($business_id);
+            $createTransactionApproval->execute($transaction, $business, 'purchase_permission');
 
             $purchase_lines = [];
             $purchases = $request->input('purchases');

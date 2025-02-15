@@ -568,6 +568,8 @@ $(document).ready(function() {
             { data: 'payment_status', name: 'payment_status' },
             { data: 'final_total', name: 'final_total' },
             { data: 'payment_due', name: 'payment_due', orderable: false, searchable: false },
+            { data: 'confirmedUsers', name: 'confirmedUsers', 'searchable': false, 'sortable':false},
+            { data: 'userWhoConfirmed', name: 'userWhoConfirmed', 'searchable': false, 'sortable':false},
             { data: 'added_by', name: 'u.first_name' },
         ],
         fnDrawCallback: function(oSettings) {

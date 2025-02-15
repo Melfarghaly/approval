@@ -385,6 +385,7 @@ class TransactionUtil extends Util
                     'res_line_order_status' => ! empty($product['res_service_staff_id']) ? 'received' : null,
                     'so_line_id' => ! empty($product['so_line_id']) ? $product['so_line_id'] : null,
                     'secondary_unit_quantity' => ! empty($product['secondary_unit_quantity']) ? $this->num_uf($product['secondary_unit_quantity']) : 0,
+                    'total_quantity_before_edit' => TransactionSellLine::find($product['so_line_id']??1)?->quantity ?? 0
                 ];
 
                 foreach ($extra_line_parameters as $key => $value) {
@@ -6675,6 +6676,6 @@ class TransactionUtil extends Util
         return false;
     }
 
-    
-    
+
+
 }

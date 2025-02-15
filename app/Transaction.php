@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Models\Activity;
 class Transaction extends Model
 {
@@ -154,6 +155,11 @@ class Transaction extends Model
     public function subscription_invoices()
     {
         return $this->hasMany(\App\Transaction::class, 'recur_parent_id');
+    }
+
+    public function transactionApprovals(): HasMany
+    {
+        return $this->hasMany(TransactionApproval::class, 'transaction_id');
     }
 
     /**

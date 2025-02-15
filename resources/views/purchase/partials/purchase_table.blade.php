@@ -10,6 +10,8 @@
             <th>@lang('purchase.payment_status')</th>
             <th>@lang('purchase.grand_total')</th>
             <th>@lang('purchase.payment_due') &nbsp;&nbsp;<i class="fa fa-info-circle text-info no-print" data-toggle="tooltip" data-placement="bottom" data-html="true" data-original-title="{{ __('messages.purchase_due_tooltip')}}" aria-hidden="true"></i></th>
+            <th>@lang('lang_v1.UserConfirmed')</th>
+            <th>@lang('lang_v1.userWhoConfirmed')</th>
             <th>@lang('lang_v1.added_by')</th>
         </tr>
     </thead>

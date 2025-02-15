@@ -91,11 +91,11 @@
         </td>
         <td>
             @php
-                $pp_without_discount = !empty($purchase_order_line) ? $purchase_order_line->pp_without_discount/$purchase_order->exchange_rate : $variation->default_purchase_price;
+                $pp_without_discount = !empty($purchase_order_line) ? $purchase_order_line->pp_without_discount/($purchase_order->exchange_rate ?? 0) : $variation->default_purchase_price;
 
                 $discount_percent = !empty($purchase_order_line) ? $purchase_order_line->discount_percent : 0;
 
-                $purchase_price = !empty($purchase_order_line) ? $purchase_order_line->purchase_price/$purchase_order->exchange_rate : $variation->default_purchase_price;
+                $purchase_price = !empty($purchase_order_line) ? $purchase_order_line->purchase_price/($purchase_order->exchange_rate ?? 0) : $variation->default_purchase_price;
 
                 $tax_id = !empty($purchase_order_line) ? $purchase_order_line->tax_id : $product->tax;
 
@@ -104,7 +104,7 @@
                 $pp_without_discount = !empty($imported_data['unit_cost_before_discount']) ? $imported_data['unit_cost_before_discount'] : $pp_without_discount;
 
                 $discount_percent = !empty($imported_data['discount_percent']) ? $imported_data['discount_percent'] : $discount_percent;
-                if($type=='permission'){
+                if(isset($type) && $type=='permission'){
                     $pp_without_discount=0;
                     $purchase_price=0;
                 }
@@ -158,7 +158,7 @@
                 }
 
                 $dpp_inc_tax = !empty($purchase_order_line) ? number_format($purchase_order_line->purchase_price_inc_tax/$purchase_order->exchange_rate, $currency_precision, $currency_details->decimal_separator, $currency_details->thousand_separator) : $dpp_inc_tax;
-                if($type=='permission'){
+                if(isset($type) && $type=='permission'){
                     $dpp_inc_tax=0;
                 }
             @endphp

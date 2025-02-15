@@ -69,4 +69,6 @@ return [
     'shipping' => 'Shipping',
     'shipping_details' => 'Shipping Details',
     'shipping_charges' => 'Shipping Charges',
+    'qtyInStore' => 'Quantity in stock',
+    'qtyReserved' => 'Reserved quantity',
 ];

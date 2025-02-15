@@ -21,7 +21,7 @@ class SalesOrderController extends Controller
     /**
      * Constructor
      *
-     * @param  ProductUtils  $product
+     * @param ProductUtils $product
      * @return void
      */
     public function __construct(TransactionUtil $transactionUtil, BusinessUtil $businessUtil, Util $commonUtil)
@@ -52,7 +52,7 @@ class SalesOrderController extends Controller
      */
     public function index()
     {
-        if (! auth()->user()->can('so.view_own') && ! auth()->user()->can('so.view_all') && ! auth()->user()->can('so.create')) {
+        if (!auth()->user()->can('so.view_own') && !auth()->user()->can('so.view_all') && !auth()->user()->can('so.create')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -78,12 +78,15 @@ class SalesOrderController extends Controller
         $location_id = request()->input('location_id');
 
         $sales_orders = Transaction::where('business_id', $business_id)
-                            ->where('location_id', $location_id)
-                            ->where('type', 'sales_order')
-                            ->whereIn('status', ['partial', 'ordered'])
-                            ->where('contact_id', $customer_id)
-                            ->select('invoice_no as text', 'id')
-                            ->get();
+            ->where('location_id', $location_id)
+            ->where('type', 'sales_order')
+            ->whereIn('status', ['partial', 'ordered'])
+            ->where('contact_id', $customer_id)
+            ->whereDoesntHave('transactionApprovals', function ($query) use ($business_id) {
+                $query->where('is_confirmed', 0);
+            })
+            ->select('invoice_no as text', 'id')
+            ->get();
 
         return $sales_orders;
     }
@@ -98,14 +101,14 @@ class SalesOrderController extends Controller
     public function getEditSalesOrderStatus(Request $request, $id)
     {
         $is_admin = $this->businessUtil->is_admin(auth()->user());
-        if (! $is_admin) {
+        if (!$is_admin) {
             abort(403, 'Unauthorized action.');
         }
 
         if ($request->ajax()) {
             $business_id = request()->session()->get('user.business_id');
             $transaction = Transaction::where('business_id', $business_id)
-                                ->findOrFail($id);
+                ->findOrFail($id);
 
             $status = $transaction->status;
             $statuses = $this->sales_order_statuses;
@@ -123,7 +126,7 @@ class SalesOrderController extends Controller
     public function postEditSalesOrderStatus(Request $request, $id)
     {
         $is_admin = $this->businessUtil->is_admin(auth()->user());
-        if (! $is_admin) {
+        if (!$is_admin) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -131,7 +134,7 @@ class SalesOrderController extends Controller
             try {
                 $business_id = request()->session()->get('user.business_id');
                 $transaction = Transaction::where('business_id', $business_id)
-                                ->findOrFail($id);
+                    ->findOrFail($id);
 
                 $transaction_before = $transaction->replicate();
 
@@ -146,7 +149,7 @@ class SalesOrderController extends Controller
                     'msg' => trans('lang_v1.success'),
                 ];
             } catch (\Exception $e) {
-                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+                \Log::emergency('File:' . $e->getFile() . 'Line:' . $e->getLine() . 'Message:' . $e->getMessage());
                 $output = [
                     'success' => 0,
                     'msg' => trans('messages.something_went_wrong'),

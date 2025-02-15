@@ -94,6 +94,8 @@
                         <th>@lang('sale.status')</th>
                         <th>@lang('lang_v1.quantity_remaining')</th>
                         <th>@lang('lang_v1.shipping_status')</th>
+                        <th>@lang('lang_v1.UserConfirmed')</th>
+                        <th>@lang('lang_v1.userWhoConfirmed')</th>
                         <th>@lang('lang_v1.added_by')</th>
                     </tr>
                 </thead>
@@ -185,6 +187,8 @@
                         data: 'shipping_status',
                         name: 'transactions.shipping_status'
                     },
+                    { data: 'confirmedUsers', name: 'confirmedUsers', 'searchable': false, 'sortable':false},
+                    { data: 'userWhoConfirmed', name: 'userWhoConfirmed', 'searchable': false, 'sortable':false},
                     {
                         data: 'added_by',
                         name: 'u.first_name'

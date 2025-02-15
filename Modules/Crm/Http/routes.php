@@ -29,7 +29,7 @@ Route::group(['middleware' => ['web', 'authh', 'auth', 'SetSessionData', 'langua
     Route::get('get-followup-groups', 'ScheduleController@getFollowUpGroups');
 
     Route::resource('follow-up-log', 'ScheduleLogController');
-    
+
     Route::get('install', 'InstallController@index');
     Route::post('install', 'InstallController@install');
     Route::get('install/uninstall', 'InstallController@uninstall');
@@ -48,7 +48,7 @@ Route::group(['middleware' => ['web', 'authh', 'auth', 'SetSessionData', 'langua
     Route::get('follow-ups-by-contact', 'ReportController@followUpsContact');
     Route::get('lead-to-customer-report', 'ReportController@leadToCustomerConversion');
     Route::get('lead-to-customer-details/{user_id}', 'ReportController@showLeadToCustomerConversionDetails');
-    Route::get('call-log', 'CallLogController@index',['only' => ['index']]);
+    Route::get('call-log', 'CallLogController@index', ['only' => ['index']]);
     Route::post('mass-delete-call-log', 'CallLogController@massDestroy');
 
     Route::get('edit-proposal-template', 'ProposalTemplateController@getEdit');

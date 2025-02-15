@@ -62,4 +62,6 @@
      'shipping' => 'شحن',
      'shipping_details' => 'تفاصيل الشحن',
      'shipping_charges' => 'رسوم الشحن',
+     'qtyInStore' => 'الكمية فى المخزن',
+     'qtyReserved' => 'الكمية المحجوزة',
  ];

@@ -1543,4 +1543,7 @@ return [
     'received_by' => 'Received by',
     'enter_details_below_to_check_repair_status' => 'Enter details below to check Repair Status',
     'search_by' => 'Search By',
+    'UserConfirmed'=>'Accreditation users',
+    'userWhoConfirmed'=>'Users who have approved',
+    'quantityNotValid' => 'quantity not available for product :attribute'
 ];

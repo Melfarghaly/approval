@@ -471,8 +471,8 @@ class ProductUtil extends Util
                     $join->on('p.brand_id', '=', 'brands.id')
                         ->whereNull('brands.deleted_at');
                 })
-                ->where('p.business_id', $business_id)
-                ->where('variations.id', $variation_id);
+                ->where('p.business_id', $business_id);
+//                ->where('variations.id', $variation_id);
 
         //Add condition for check of quantity. (if stock is not enabled or qty_available > 0)
         if ($check_qty) {
@@ -528,6 +528,7 @@ class ProductUtil extends Util
             'variations.sub_sku',
             'p.barcode_type',
             'vld.qty_available',
+            'vld.qty_reserved',
             'variations.default_sell_price',
             'variations.sell_price_inc_tax',
             'variations.id as variation_id',

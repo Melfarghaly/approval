@@ -48,6 +48,8 @@ if($sub_type=='permission')
 		@else
 			{!! $product_name !!}
 		@endif
+
+			<input type="hidden" name="products[{{$row_count}}][product_name]" value="{!! $product_name !!}">
 		<input type="hidden" class="enable_sr_no" value="{{$product->enable_sr_no}}">
 		<input type="hidden" 
 			class="product_type" 
@@ -241,7 +243,7 @@ if($sub_type=='permission')
         @endforeach
 		<div class="input-group input-number">
 			<span class="input-group-btn"><button type="button" class="btn btn-default btn-flat quantity-down"><i class="fa fa-minus text-danger"></i></button></span>
-		<input type="text" data-min="1" 
+		<input type="text" data-min="{{$product->qty_available}}"
 			class="form-control pos_quantity input_number mousetrap input_quantity" 
 			value="{{@format_quantity($product->quantity_ordered)}}" name="products[{{$row_count}}][quantity]" data-allow-overselling="@if(empty($pos_settings['allow_overselling'])){{'false'}}@else{{'true'}}@endif" 
 			@if($allow_decimal) 
@@ -330,6 +332,8 @@ if($sub_type=='permission')
 			@endforeach
 		@endif
 	</td>
+	<td>{{(int)$product->qty_available}}</td>
+	<td>{{(int)$product->qty_reserved}}</td>
 	@if(!empty($is_direct_sell))
 		@if(!empty($pos_settings['inline_service_staff']))
 			<td>
